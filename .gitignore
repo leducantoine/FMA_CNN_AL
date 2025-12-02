@@ -1,4 +1,5 @@
 data/raw/
+data/metadata/
 mels/
 models/
 __pycache__/
