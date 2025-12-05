@@ -3,6 +3,7 @@
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-orange)
 ![License](https://img.shields.io/badge/License-CentraleSup%C3%A9lec-blue)
+
 This project implements a complete **Deep Learning** pipeline for music genre classification using the **FMA-small** dataset (8 genres, 8,000 tracks, 30s excerpts).
 
 Two pipelines are provided: a **baseline** on raw Mel-spectrograms and an **augmented version** with Data Augmentation (TimeStretch, PitchShift, Noise, etc.) optimized for **Apple Silicon (M1/M2/M3)** via PyTorch's `MPS` backend.
@@ -211,4 +212,5 @@ Possible extension paths:
 
 - License: **CentraleSupélec Academic Project**-
 - Author: **Antoine Leduc**
+
 Project conducted as a study on the effectiveness of lightweight CNNs for music genre classification on ARM/Apple Silicon architectures.
