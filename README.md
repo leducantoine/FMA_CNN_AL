@@ -4,44 +4,44 @@
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-orange)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-Ce projet implémente un pipeline complet de **Deep Learning** pour la classification de genres musicaux à partir du dataset **FMA-small** (8 genres, 8 000 pistes, extraits de 30s).
+This project implements a complete **Deep Learning** pipeline for music genre classification using the **FMA-small** dataset (8 genres, 8,000 tracks, 30s excerpts).
 
-Deux pipelines sont fournis : une **baseline** sur Mel-spectrogrammes bruts et une **version augmentée** avec Data Augmentation (TimeStretch, PitchShift, bruit, etc.) optimisée pour **Apple Silicon (M1/M2/M3)** via le backend `MPS` de PyTorch.
+Two pipelines are provided: a **baseline** on raw Mel-spectrograms and an **augmented version** with Data Augmentation (TimeStretch, PitchShift, Noise, etc.) optimized for **Apple Silicon (M1/M2/M3)** via PyTorch's `MPS` backend.
 
 ---
 
-## 📂 Structure du projet
+## 📂 Project Structure
 
 ```bash
 FMA_CNN_AL/
 │
 ├── data/
-│   ├── raw/                 # Fichiers .mp3 (non versionnés)
+│   ├── raw/                 # .mp3 files (not versioned)
 │   └── metadata/            # tracks.csv
 │
-├── mels/                    # Spectrogrammes de base (.npy, ignorés par git)
-├── mels_augmented/          # Spectrogrammes augmentés (.npy, ignorés par git)
+├── mels/                    # Baseline spectrograms (.npy, git-ignored)
+├── mels_augmented/          # Augmented spectrograms (.npy, git-ignored)
 │
-├── src/                     # 🟢 CODE BASELINE
-│   ├── preprocess.py        # MP3 -> Mel-spectrogrammes
-│   ├── dataset.py           # Dataset PyTorch (baseline)
-│   ├── model.py             # CNN léger (baseline)
-│   ├── train.py             # Entraînement baseline
-│   └── visualize.py         # Courbes & comparaisons
-│   └── analyze.py           # Analyse & évaluation des modèles
+├── src/                     # 🟢 BASELINE CODE
+│   ├── preprocess.py        # MP3 -> Mel-spectrograms
+│   ├── dataset.py           # PyTorch Dataset (baseline)
+│   ├── model.py             # Lightweight CNN (baseline)
+│   ├── train.py             # Baseline training
+│   ├── visualize.py         # Curves & comparisons
+│   └── analyze.py           # Model analysis & evaluation
 │
-├── src_aug/                 # 🟠 CODE AUGMENTÉ (Data Augmentation)
-│   ├── preprocess.py        # Génération mels + versions augmentées
-│   ├── dataset.py           # Dataset gérant les fichiers augmentés
-│   ├── model.py             # CNN ajusté / régularisé
-│   └── train.py             # Entraînement sur données augmentées
-│   └── analyze.py           # Analyse & évaluation (augmenté)
+├── src_aug/                 # 🟠 AUGMENTED CODE (Data Augmentation)
+│   ├── preprocess.py        # Mel generation + augmented versions
+│   ├── dataset.py           # Dataset handling augmented files
+│   ├── model.py             # Adjusted / regularized CNN
+│   ├── train.py             # Training on augmented data
+│   └── analyze.py           # Analysis & evaluation (augmented)
 │
-├── results/                 # Métriques & graphiques
+├── results/                 # Metrics & graphics
 │   ├── comparison_curves.png
 │   ├── confusion_matrix.png
 │   ├── final_metrics.txt
-│   └── *.npy                # Historiques de loss (ignorés par git)
+│   └── *.npy                # Loss histories (git-ignored)
 │
 ├── requirements.txt
 └── README.md
@@ -51,29 +51,29 @@ FMA_CNN_AL/
 
 ## 🚀 Installation
 
-### 2.1. Prérequis
+### 2.1. Prerequisites
 
 - Python ≥ 3.10  
-- `git` et un environnement virtuel (recommandé, ex. `venv` ou `conda`).
+- `git` and a virtual environment (recommended, e.g. `venv` or `conda`).
 
-Cloner le dépôt puis installer les dépendances :
+Clone the repository and install dependencies:
 
 ```bash
 git clone https://github.com/leducantoine/FMA_CNN_AL.git
 cd FMA_CNN_AL
 
-# Optionnel mais recommandé
+# Optional but recommended
 python -m venv .venv
-source .venv/bin/activate  # sous macOS / Linux
-# .venv\Scripts\activate   # sous Windows PowerShell
+source .venv/bin/activate  # on macOS / Linux
+# .venv\\Scripts\\activate   # on Windows PowerShell
 
 pip install -r requirements.txt
 ```
 
-### 2.2. Accélération Apple Silicon (MPS)
+### 2.2. Apple Silicon (MPS) Acceleration
 
-Le code détecte automatiquement la présence de MPS (`device = "mps"`), sinon il bascule sur CPU.
-Vérifier que PyTorch voit bien MPS :
+The code automatically detects MPS (`device = "mps"`), otherwise falls back to CPU.
+Verify that PyTorch sees MPS:
 
 ```bash
 python -c "import torch; print(f'MPS Available: {torch.backends.mps.is_available()}')"
@@ -81,126 +81,136 @@ python -c "import torch; print(f'MPS Available: {torch.backends.mps.is_available
 
 ---
 
-## 💾 Préparation du dataset (FMA-Small)
+## 💾 Dataset Preparation (FMA-Small)
 
-Le dataset **FMA-small** n'est pas versionné dans le dépôt.
+The **FMA-small** dataset is not versioned in this repository.
 
-1. Télécharger le dataset depuis Kaggle (ex. FMA-small dérivé de `fma` original) :  
+1. Download the dataset from Kaggle (e.g. FMA-small derived from original `fma`):  
    https://www.kaggle.com/datasets/aaronyim/fma-small
-2. Extraire les fichiers et organiser comme suit :
+2. Extract files and organize as follows:
 
 ```bash
 data/
 ├── raw/
-│   ├── 000/             # Fichiers .mp3
-│   ├── 001/             # Fichiers .mp3
+│   ├── 000/             # .mp3 files
+│   ├── 001/             # .mp3 files
 │   ├── ...
-│   └── 155/             # Fichiers .mp3
+│   └── 155/             # .mp3 files
 └── metadata/
-    └── tracks.csv    # Fichier de métadonnées FMA---
+    └── tracks.csv    # FMA metadata file
+```
 
-## ⚙️ Utilisation pas à pas
+> **Important**: The `data/raw/` folder should not be versioned on GitHub (see `.gitignore`).
 
-Cette section explique exactement quoi lancer et dans quel ordre.
+---
 
-### Étape A – Baseline (rapide)
+## ⚙️ Step-by-Step Usage
 
-**1. Pré-calcul des Mel-spectrogrammes** (une seule fois) :
+This section explains exactly what to run and in which order.
+
+### Step A – Baseline (fast)
+
+**1. Pre-compute Mel-spectrograms** (once):
 
 ```bash
 python src/preprocess.py
 ```
 
-- Lit les `.mp3` dans `data/raw/` (dossiers 000/ à 155/).- Sauvegarde un `.npy` par piste dans `mels/`.
+- Reads `.mp3` files from `data/raw/` (folders 000/ to 155/).
+- Saves one `.npy` file per track in `mels/`.
 
-**2. Entraînement du modèle baseline** :
-- Lit les `.mp3` dans `data/raw/` (dossiers 000/ à 155/).
+**2. Train the baseline model**:
 
-Ce script :
-- Charge les spectrogrammes depuis `mels/`.  
-- Effectue le split train/validation/test.  
-- Entraîne un CNN léger sur `mps` (si dispo) ou CPU.  
-- Sauvegarde les courbes / métriques dans `results/`  
-  (par ex. loss / accuracy, `final_metrics.txt`, etc.).
+```bash
+python src/train.py
+```
 
-### Étape B – Pipeline augmenté (performant)
+This script:
+- Loads spectrograms from `mels/`.  
+- Performs train/validation/test split.  
+- Trains a lightweight CNN on `mps` (if available) or CPU.  
+- Saves curves / metrics in `results/`  
+  (e.g. loss / accuracy, `final_metrics.txt`, etc.).
 
-**1. Génération des Mel-spectrogrammes augmentés** :
+### Step B – Augmented pipeline (better performance)
+
+**1. Generate augmented Mel-spectrograms**:
 
 ```bash
 python src_aug/preprocess.py
 ```
 
-- Crée plusieurs versions par piste (Original + Noise + TimeStretch/PitchShift).
-- Stocke les spectrogrammes dans `mels_augmented/`.
+- Creates multiple versions per track (Original + Noise + TimeStretch/PitchShift).
+- Stores spectrograms in `mels_augmented/`.
 
-**2. Entraînement sur données augmentées** :
+**2. Train on augmented data**:
 
 ```bash
 python src_aug/train.py
 ```
 
-Ce script :
-- Charge `mels_augmented/`.  
-- Entraîne un modèle légèrement modifié (CNN avec ajustements / régularisation).  
-- Sauvegarde les métriques et courbes dans `results/`  
-  (y compris les données nécessaires pour la comparaison baseline vs augmenté).
+This script:
+- Loads `mels_augmented/`.  
+- Trains a slightly modified model (CNN with adjustments / regularization).  
+- Saves metrics and curves in `results/`  
+  (including data needed for baseline vs augmented comparison).
 
-### Étape C – Évaluation & comparaison des modèles
-Une fois les deux entraînements effectués (baseline + augmenté) :
+### Step C – Evaluation & model comparison
 
-**Option 1 : Évaluation complète avec `analyze.py`** (recommandé) :
+Once both trainings are completed (baseline + augmented):
+
+**Option 1: Complete evaluation with `analyze.py`** (recommended):
 
 ```bash
-# Pour baseline
+# For baseline
 python src/analyze.py
 
-# Pour version augmentée
+# For augmented version
 python src_aug/analyze.py
 ```
 
-Ce script :
-- Charge les modèles entraînés depuis `results/`.
-- Évalue sur le test set avec métriques détaillées (accuracy, F1, confusion matrix).
-- Sauvegarde les résultats dans `results/`.
+This script:
+- Loads trained models from `results/`.
+- Evaluates on test set with detailed metrics (accuracy, F1, confusion matrix).
+- Saves results in `results/`.
 
-**Option 2 : Comparaison visuelle simple avec `visualize.py`** :
+**Option 2: Simple visual comparison with `visualize.py`**:
 
 ```bash
 python src/visualize.py
 ```
 
-- Charge les historiques de loss/accuracy stockés en `.npy`.
-- Génère les figures de comparaison dans `results/`  
-  (par ex. `comparison_curves.png`, `confusion_matrix.png`).
+- Loads loss/accuracy histories stored in `.npy`.
+- Generates comparison figures in `results/`  
+  (e.g. `comparison_curves.png`, `confusion_matrix.png`).
 
 ---
 
-## 📊 Résultats & architecture
+## 📊 Results & Architecture
 
-- Les fichiers principaux produits sont :  
-  - `results/comparison_curves.png` : évolution des métriques baseline vs augmenté.
-  - `results/confusion_matrix.png` : matrice de confusion du meilleur modèle.  
+- Main output files:  
+  - `results/comparison_curves.png`: metric evolution baseline vs augmented.
+  - `results/confusion_matrix.png`: confusion matrix of the best model.  
 
-- Le modèle est un **CNN léger** composé de 4 blocs Convolution → BatchNorm → ReLU → MaxPool, suivi d'un flatten et d'une couche linéaire finale vers 8 genres.
-
----
-
-## 🛠 Notes techniques & extension
-
-- Les spectrogrammes sont calculés **offline** pour accélérer l'entraînement et limiter la charge CPU.
-- Le backend `MPS` est utilisé automatiquement sur Mac M1/M2/M3 s'il est disponible, sinon bascule sur CPU.
-
-Pistes d'extension possibles :  
-- Ajouter davantage de data augmentation (SpecAugment, mixup).  
-- Tester des architectures plus profondes (CRNN, attention).  
-- Intégrer un scheduler, de l'early stopping ou du logging avancé (Weights & Biases, TensorBoard).
+- The model is a **lightweight CNN** composed of 4 blocks Convolution → BatchNorm → ReLU → MaxPool, followed by flatten and a final linear layer to 8 genres.
 
 ---
 
-## 📝 Licence & auteur
+## 🛠 Technical Notes & Extensions
 
-- Licence : **MIT**  
-- Auteur : **Antoine Leduc**  
+- Spectrograms are computed **offline** to speed up training and limit CPU load.
+- The `MPS` backend is used automatically on Mac M1/M2/M3 if available, otherwise falls back to CPU.
 
-Projet réalisé dans le cadre d'une étude sur l'efficacité de CNN légers pour la classification de genres musicaux sur architectures ARM/Apple Silicon.
+Possible extension paths:  
+- Add more data augmentation (SpecAugment, mixup).  
+- Test deeper architectures (CRNN, attention).  
+- Integrate scheduler, early stopping, or advanced logging (Weights & Biases, TensorBoard).
+
+---
+
+## 📝 License & Author
+
+- License: **MIT**  
+- Author: **Antoine Leduc**  
+
+Project conducted as a study on the effectiveness of lightweight CNNs for music genre classification on ARM/Apple Silicon architectures.
