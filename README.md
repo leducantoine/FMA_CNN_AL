@@ -28,12 +28,14 @@ FMA_CNN_AL/
 │   ├── model.py             # CNN léger (baseline)
 │   ├── train.py             # Entraînement baseline
 │   └── visualize.py         # Courbes & comparaisons
+│   └── analyze.py           # Analyse & évaluation des modèles
 │
 ├── src_aug/                 # 🟠 CODE AUGMENTÉ (Data Augmentation)
 │   ├── preprocess.py        # Génération mels + versions augmentées
 │   ├── dataset.py           # Dataset gérant les fichiers augmentés
 │   ├── model.py             # CNN ajusté / régularisé
 │   └── train.py             # Entraînement sur données augmentées
+│   └── analyze.py           # Analyse & évaluation (augmenté)
 │
 ├── results/                 # Métriques & graphiques
 │   ├── comparison_curves.png
@@ -144,9 +146,25 @@ Ce script :
 - Sauvegarde les métriques et courbes dans `results/`  
   (y compris les données nécessaires pour la comparaison baseline vs augmenté).
 
-### Étape C – Visualisation & comparaison
-
+### Étape C – Évaluation & comparaison des modèles
 Une fois les deux entraînements effectués (baseline + augmenté) :
+
+**Option 1 : Évaluation complète avec `analyze.py`** (recommandé) :
+
+```bash
+# Pour baseline
+python src/analyze.py
+
+# Pour version augmentée
+python src_aug/analyze.py
+```
+
+Ce script :
+- Charge les modèles entraînés depuis `results/`.
+- Évalue sur le test set avec métriques détaillées (accuracy, F1, confusion matrix).
+- Sauvegarde les résultats dans `results/`.
+
+**Option 2 : Comparaison visuelle simple avec `visualize.py`** :
 
 ```bash
 python src/visualize.py
