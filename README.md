@@ -90,14 +90,12 @@ Le dataset **FMA-small** n'est pas versionné dans le dépôt.
 ```bash
 data/
 ├── raw/
-│   └── fma_small/        # Contient les dossiers 000, 001, ..., 155
+│   ├── 000/             # Fichiers .mp3
+│   ├── 001/             # Fichiers .mp3
+│   ├── ...
+│   └── 155/             # Fichiers .mp3
 └── metadata/
-    └── tracks.csv        # Fichier de métadonnées FMA
-```
-
-> **Important** : le dossier `data/raw/` ne doit pas être versionné sur GitHub (voir `.gitignore`).
-
----
+    └── tracks.csv    # Fichier de métadonnées FMA---
 
 ## ⚙️ Utilisation pas à pas
 
@@ -111,14 +109,10 @@ Cette section explique exactement quoi lancer et dans quel ordre.
 python src/preprocess.py
 ```
 
-- Lit les `.mp3` dans `data/raw/fma_small/`.  
-- Sauvegarde un `.npy` par piste dans `mels/`.
+- Lit les `.mp3` dans `data/raw/` (dossiers 000/ à 155/).- Sauvegarde un `.npy` par piste dans `mels/`.
 
 **2. Entraînement du modèle baseline** :
-
-```bash
-python src/train.py
-```
+- Lit les `.mp3` dans `data/raw/` (dossiers 000/ à 155/).
 
 Ce script :
 - Charge les spectrogrammes depuis `mels/`.  
