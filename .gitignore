@@ -1,7 +1,9 @@
 data/raw/
 data/metadata/
 mels/
+mels_augmented/
 models/
+models_aug/
 __pycache__/
 .ipynb_checkpoints/
 *.pth
